@@ -6,7 +6,7 @@ The system features a distributed architecture offloading user interface and saf
 
 ---
 
-## 📌 Overview & Key Features
+## Overview & Key Features
 
 * **Dual-Controller Architecture:** High-level UI and obstacle safety managed by VEGA RISC-V; real-time motion and control loop executed on STM32.
 * **3-Bit Parallel Inter-Board Communication:** Parallel GPIO bus (`PC6`, `PC8`, `PC9`) transmits table target binary codes from VEGA to STM32.
@@ -21,10 +21,11 @@ The system features a distributed architecture offloading user interface and saf
 
 ```text
 Smart-Cafe-Robot-ES-333/
-├── Stm32 Code files/
-│   ├── main.c                   # STM32 FSM, TIM2 PWM, IR navigation, & GPIO logic
-│   └── final_lap.ioc     # STM32CubeMX hardware configuration file
-├── Vega code            # VEGA board sketch (LCD UI, user buttons, & ultrasonic obstacle detection)
+├── Code files/
+|    ├──STM32 code files/ 
+|     ├── main.c                   # STM32 FSM, TIM2 PWM, IR navigation, & GPIO logic
+│     └── final_lap.ioc            # STM32CubeMX hardware configuration file
+|    ├── Vega code            # VEGA board sketch (LCD UI, user buttons, & ultrasonic obstacle detection)
 ├── reference docs/
 │   ├── block_diagram.png        # System architecture diagram
 │   ├── fsm_diagram.png          # Finite State Machine flowcharts
