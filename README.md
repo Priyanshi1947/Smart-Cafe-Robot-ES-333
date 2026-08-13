@@ -27,9 +27,9 @@ Smart-Cafe-Robot-ES-333/
 │     └── final_lap.ioc            # STM32CubeMX hardware configuration file
 |    ├── Vega code            # VEGA board sketch (LCD UI, user buttons, & ultrasonic obstacle detection)
 ├── reference docs/
-│   ├── block_diagram.png        # System architecture diagram
-│   ├── fsm_diagram.png          # Finite State Machine flowcharts
-│   ├── schematic.pdf            # Full hardware pinout & wiring schematic
+│   ├── block_diagram.md        # System architecture diagram
+│   ├── FSM_diagram.md         # Finite State Machine flowchart for overall logic
+│   ├── Hardware Pinout & Interfacing Docuentation.md            # Full primary hardware pinout for both the boards
 │   └── video_link.txt           # Link to demonstration video
 └── README.md                    
 
