@@ -31,3 +31,5 @@ Smart-Cafe-Robot-ES-333/
 │   ├── schematic.pdf            # Full hardware pinout & wiring schematic
 │   └── video_link.txt           # Link to demonstration video
 └── README.md                    
+
+Complete STM32 Workspace: To access the full auto-generated STM32CubeIDE project workspace (drivers, startup code, and headers) visit this link : https://drive.google.com/file/d/1MSM3QbvPRWi94Gcrqy1bdm5W3tRe6DdV/view?usp=sharing.
