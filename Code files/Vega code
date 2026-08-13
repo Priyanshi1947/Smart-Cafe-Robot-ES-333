@@ -1,1 +1,202 @@
 
+#include <LiquidCrystal_I2C.h>
+#include <Wire.h>
+
+// -------- LCD --------
+TwoWire Wire(1);
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+// -------- BUTTONS --------
+#define BTN1 2
+#define BTN2 3
+#define BTN3 4
+#define BTN4 5
+#define BTN5 6
+#define BTN_OK 10
+
+// -------- TABLE BITS --------
+#define D0 11
+#define D1 12
+#define D2 13
+
+// -------- CONTROL PINS --------
+#define STOP_PIN 14
+#define RETURN_PIN 15
+#define SELECT_PIN 16
+
+// -------- ULTRASONIC --------
+#define TRIG 8
+#define ECHO 9
+
+// -------- STATE --------
+int currentTable = 0;
+bool obstacleActive = false;
+bool isReturning = false;
+
+// -------- SEND TABLE --------
+void sendTable(int table) {
+  digitalWrite(D0, table & 0x01);
+  digitalWrite(D1, (table >> 1) & 0x01);
+  digitalWrite(D2, (table >> 2) & 0x01);
+
+  // pulse SELECT
+  digitalWrite(SELECT_PIN, HIGH);
+  delay(100);
+  digitalWrite(SELECT_PIN, LOW);
+}
+
+// -------- SETUP --------
+void setup() {
+  Wire.begin();
+  Serial.begin(9600);
+
+  pinMode(BTN1, INPUT_PULLUP);
+  pinMode(BTN2, INPUT_PULLUP);
+  pinMode(BTN3, INPUT);
+  pinMode(BTN4, INPUT_PULLUP);
+  pinMode(BTN5, INPUT_PULLUP);
+  pinMode(BTN_OK, INPUT_PULLUP);
+
+  pinMode(D0, OUTPUT);
+  pinMode(D1, OUTPUT);
+  pinMode(D2, OUTPUT);
+
+  pinMode(STOP_PIN, OUTPUT);
+  pinMode(RETURN_PIN, OUTPUT);
+  pinMode(SELECT_PIN, OUTPUT);
+
+  pinMode(TRIG, OUTPUT);
+  pinMode(ECHO, INPUT);
+
+  // initialize control pins
+  digitalWrite(STOP_PIN, LOW);
+  digitalWrite(RETURN_PIN, LOW);
+  digitalWrite(SELECT_PIN, LOW);
+
+  lcd.init();
+  lcd.backlight();
+  lcd.print("System Ready");
+}
+
+// -------- ULTRASONIC --------
+float getDistance() {
+  digitalWrite(TRIG, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG, LOW);
+
+  long duration = pulseIn(ECHO, HIGH);
+  return duration * 0.034 / 2;
+}
+
+// -------- LOOP --------
+void loop() {
+
+  // -------- TABLE BUTTONS --------
+  if (digitalRead(BTN1) == HIGH) {
+    currentTable = 1;
+    isReturning = false;
+
+    sendTable(1);
+
+    lcd.clear();
+    lcd.print("Table 1 Selected");
+    delay(300);
+  }
+
+  if (digitalRead(BTN2) == HIGH) {
+    currentTable = 2;
+    isReturning = false;
+
+    sendTable(2);
+
+    lcd.clear();
+    lcd.print("Table 2 Selected");
+    delay(300);
+  }
+
+  if (digitalRead(BTN3) == HIGH) {
+    currentTable = 3;
+    isReturning = false;
+
+    sendTable(3);
+
+    lcd.clear();
+    lcd.print("Table 3 Selected");
+    delay(300);
+  }
+
+  if (digitalRead(BTN4) == HIGH) {
+    currentTable = 4;
+    isReturning = false;
+
+    sendTable(4);
+
+    lcd.clear();
+    lcd.print("Table 4 Selected");
+    delay(300);
+  }
+
+  if (digitalRead(BTN5) == HIGH) {
+    currentTable = 5;
+    isReturning = false;
+
+    sendTable(5);
+
+    lcd.clear();
+    lcd.print("Table 5 Selected");
+    delay(300);
+  }
+
+  // -------- RETURN BUTTON --------
+  if (digitalRead(BTN_OK) == HIGH) {
+    isReturning = true;
+
+    digitalWrite(RETURN_PIN, HIGH);
+
+    lcd.clear();
+    lcd.print("Returning...");
+    delay(300);
+  }
+
+  // -------- ULTRASONIC --------
+  float distance = getDistance();
+
+  // -------- OBSTACLE --------
+  if (distance < 20) {
+
+    if (!obstacleActive) {
+      digitalWrite(STOP_PIN, HIGH);
+
+      lcd.clear();
+      lcd.print("OBSTACLE!");
+
+      obstacleActive = true;
+    }
+
+  } else {
+
+    if (obstacleActive) {
+      digitalWrite(STOP_PIN, LOW);
+
+      lcd.clear();
+
+      
+      if (isReturning) {
+        lcd.print("Returning...");
+      } else if (currentTable != 0) {
+        lcd.print("Table ");
+        lcd.print(currentTable);
+        lcd.print(" Selected");
+      } else {
+        lcd.print("System Ready");
+      }
+
+      obstacleActive = false;
+    }
+  }
+
+  delay(200);
+}
